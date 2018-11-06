@@ -1,0 +1,54 @@
+apply plugin: 'scala'
+apply plugin: 'application'
+
+jar {
+
+    baseName = 'blacklist-api'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    manifest {
+        attributes("Implementation-Title": baseName,
+                "Built-Date": new Date())
+    }
+}
+
+distributions {
+    main {
+        baseName = jar.baseName
+        applicationName = jar.baseName
+        contents {
+            from('src/main/resources/dist') {
+                eachFile { file ->
+                    if (file.getName().equals("install") ||
+                            file.getName().equals("uninstall") )
+                        file.setMode(0744)
+                }
+            }
+        }
+    }
+}
+
+tasks.withType(Tar) { compression = Compression.GZIP }
+
+mainClassName = "net.kyivstar.anonymizer.App"
+
+repositories { mavenCentral() }
+
+dependencies {
+
+    compile project(":model")
+
+    compile('com.typesafe.akka:akka-actor_2.12:2.5.17')
+    compile('com.typesafe.akka:akka-stream_2.12:2.5.17')
+    compile('com.typesafe.akka:akka-slf4j_2.12:2.5.17')
+    compile('com.typesafe.akka:akka-http_2.12:10.1.5')
+    
+    compile('io.prometheus:simpleclient_common:0.5.0')
+    compile('io.prometheus:simpleclient_hotspot:0.5.0')
+
+    testCompile('junit:junit:4.12')
+    testCompile('org.scalatest:scalatest_2.12:3.0.5')
+    testCompile('com.typesafe.akka:akka-http-testkit_2.12:10.1.5')
+}
