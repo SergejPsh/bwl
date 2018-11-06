@@ -2,7 +2,7 @@ apply plugin: 'scala'
 
 jar {
 
-    baseName = 'blacklist-model'
+    baseName = 'bwl-model'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8

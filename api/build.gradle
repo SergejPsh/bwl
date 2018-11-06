@@ -3,7 +3,7 @@ apply plugin: 'application'
 
 jar {
 
-    baseName = 'blacklist-api'
+    baseName = 'bwl-api'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -32,7 +32,7 @@ distributions {
 
 tasks.withType(Tar) { compression = Compression.GZIP }
 
-mainClassName = "net.kyivstar.anonymizer.App"
+mainClassName = "org.test.bwl.api.App"
 
 repositories { mavenCentral() }
 
