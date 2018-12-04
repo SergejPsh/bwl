@@ -1,9 +1,10 @@
 package org.test.bwl.model.conf
 
-import org.slf4j.LoggerFactory.getLogger
 import com.typesafe.config.ConfigFactory
+import org.slf4j.LoggerFactory.getLogger
 
 trait Conf {
+
   private val log = getLogger(getClass)
   private val config = ConfigFactory.load
 

@@ -1,0 +1,83 @@
+<configuration>
+
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+
+    <!--***************************************************************************************************************-->
+
+    <appender name="APP_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/app.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/app-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxHistory>7</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <charset>utf-8</charset>
+            <pattern>[%d{HH:mm:ss.SSS}] [%-4level] [%-36logger{36}] %msg%n%xException</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ELASTIC" class="com.internetitem.logback.elasticsearch.ElasticsearchAppender">
+        <url>${ELASTICSEARCH_URI}</url>
+        <index>logs-%date{yyyy-MM-dd}</index>
+        <type>log</type>
+        <connectTimeout>5000</connectTimeout>
+        <readTimeout>5000</readTimeout>
+        <sleepTime>250</sleepTime>
+        <maxRetries>2</maxRetries>
+        <maxQueueSize>104857600</maxQueueSize>
+        <properties>
+            <property>
+                <name>host</name>
+                <value>${HOSTNAME}</value>
+                <allowEmpty>false</allowEmpty>
+            </property>
+            <property>
+                <name>service</name>
+                <value>anonymizer-api</value>
+            </property>
+            <property>
+                <name>severity</name>
+                <value>%level</value>
+            </property>
+            <property>
+                <name>thread</name>
+                <value>%thread</value>
+            </property>
+            <property>
+                <name>logger</name>
+                <value>%logger</value>
+            </property>
+            <property>
+                <name>stacktrace</name>
+                <value>%ex</value>
+            </property>
+        </properties>
+        <headers>
+            <header>
+                <name>Content-Type</name>
+                <value>application/x-ndjson</value>
+            </header>
+        </headers>
+    </appender>
+
+    <!--***************************************************************************************************************-->
+
+    <appender name="ASYNC_APP_FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>3000</queueSize><discardingThreshold>0</discardingThreshold><appender-ref ref="APP_FILE" />
+    </appender>
+
+    <appender name="ASYNC_ELASTIC" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>3000</queueSize><discardingThreshold>0</discardingThreshold><appender-ref ref="ELASTIC" />
+    </appender>
+
+    <!--***************************************************************************************************************-->
+
+    <root level="INFO">
+        <appender-ref ref="ASYNC_APP_FILE" />
+        <appender-ref ref="ASYNC_ELASTIC" />
+    </root>
+
+</configuration>

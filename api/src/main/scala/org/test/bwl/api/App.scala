@@ -1,19 +1,19 @@
 package org.test.bwl.api
 
 import akka.http.scaladsl.server.HttpApp
-import com.datastax.driver.mapping.Result
-import org.test.bwl.model.conf.{Conf, DB}
-import org.test.bwl.model.dao.{User, UserAccessor}
+import org.test.bwl.model.conf.DB
 
 object App extends HttpApp with DB {
 
-  def main(args: Array[String]): Unit = {
-    //startServer("0.0.0.0", 8080)
-    println(conf.getList("client.db.contact.points"))
+  def main(args: Array[String]): Unit =
+    startServer("0.0.0.0", 8080)
 
+  override def routes = path("api" / "rules" / LongNumber) { msisdn =>
+
+//    println(msisdn)
+
+    complete(s"Hello, msisdn: $msisdn")
   }
 
-  override def routes = pathSingleSlash {
-    complete("Hello Akka!")
-  }
+  // GET  http://127.0.0.1:8080/api/rules/${msisdn}
 }

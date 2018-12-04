@@ -1,5 +1,5 @@
 #!/bin/bash
-for file in $2/sql/*.sql;
+for file in $(dirname $0)/sql/*.sql;
  do
    echo "$(basename $0): $(basename ${file}): loading..." &&
    until $1/bin/cqlsh -C -f "$file";
