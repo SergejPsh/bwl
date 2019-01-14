@@ -27,7 +27,7 @@ trait DB extends Conf {
 
   val blackListRuleAccessor = new MappingManager(session).createAccessor(classOf[BlackListRuleAccessor])
 
- // val blackListRuleMapper = new MappingManager(session).mapper(classOf[BlackListRule])
+  // val blackListRuleMapper = new MappingManager(session).mapper(classOf[BlackListRule])
 
   val configs = ConfigFactory.parseMap(configAccessor.getAll.all.asScala.map(config => (config.key, config.value)).toMap.asJava)
   val users = userAccessor.getAll.all.asScala.map(user => (user.login, user)).toMap
